@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+  mysql:
+    image: mysql:5.5
+    ports:
+      - "3306:3306"
+    environment: 
+        MYSQL_ROOT_PASSWORD: root123
+        MYSQL_DATABASE: testdb
+        MYSQL_USER: app-root
+        MYSQL_PASSWORD: root123
+        MYSQL_CI_URL: jdbc:mysql://localhost:3306/testdb
+  mongodb: 
+    image: mongo:latest
+    ports:
+     - "27017:27017"
+    environment: 
+        database: testdb
+        host: localhost 
+  customerservice: 
+     image: farhawajid/customerservice:v1
+     restart: always
+     depends_on: 
+       - mysql
+     ports: 
+       - 8089:8089
+     expose: 
+        - 8089
+  mobileservice: 
+     image: farhawajid/mobileservice:v1
+     restart: always
+     depends_on: 
+       - mongodb
+     ports: 
+       - 8090:8090
+     expose: 
+        - 8090    
+  
